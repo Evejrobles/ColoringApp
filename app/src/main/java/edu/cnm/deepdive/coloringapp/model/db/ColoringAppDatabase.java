@@ -54,7 +54,7 @@ public abstract class ColoringAppDatabase extends RoomDatabase {
    *
    * @return the coloringt dao
    */
-  public abstract ColoringDao getColoringtDao();
+  public abstract ColoringDao getColoringDao();
 
   /**
    * Gets drawing dao.

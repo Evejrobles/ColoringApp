@@ -1,13 +1,21 @@
 package edu.cnm.deepdive.coloringapp.view;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Path;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,17 +33,25 @@ import java.util.UUID;
  */
 public class DrawingFragment extends Fragment implements OnClickListener, PaintClickable {
 
-  private DrawingView drawView;
+  private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 12;
+  protected DrawingView drawView;
   private ImageButton currPaint, drawBtn, eraseBtn, newBtn, saveBtn;
   private float smallBrush, mediumBrush, largeBrush;
+  private byte[] mapImage;
+  private DrawingViewModel viewModel;
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    viewModel = ViewModelProviders.of(this).get(DrawingViewModel.class);
+
     View view = inflater.inflate(R.layout.draw_activity, container, false);
 
     drawView = (DrawingView) view.findViewById(R.id.drawing);
+    drawView.setCanvasBitmap(viewModel.bitmap);
+    drawView.setDrawPath(viewModel.path);
+
     LinearLayout paintLayout = (LinearLayout) view.findViewById(R.id.paint_colors);
 
     currPaint = (ImageButton) paintLayout.getChildAt(0);
@@ -78,36 +94,12 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
       brushDialog.setTitle("Brush size:");
       brushDialog.setContentView(R.layout.brush_chooser);
       ImageButton smallBtn = (ImageButton) brushDialog.findViewById(R.id.small_brush);
-      smallBtn.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          drawView.setBrushSize(smallBrush);
-          drawView.setLastBrushSize(smallBrush);
-          drawView.setErase(false);
-          brushDialog.dismiss();
-        }
-      });
+      setBrushListener(brushDialog, smallBtn, smallBrush);
       ImageButton mediumBtn = (ImageButton) brushDialog.findViewById(R.id.medium_brush);
-      mediumBtn.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          drawView.setBrushSize(mediumBrush);
-          drawView.setLastBrushSize(mediumBrush);
-          drawView.setErase(false);
-          brushDialog.dismiss();
-        }
-      });
+      setBrushListener(brushDialog, mediumBtn, mediumBrush);
 
       ImageButton largeBtn = (ImageButton) brushDialog.findViewById(R.id.large_brush);
-      largeBtn.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          drawView.setBrushSize(largeBrush);
-          drawView.setLastBrushSize(largeBrush);
-          drawView.setErase(false);
-          brushDialog.dismiss();
-        }
-      });
+      setBrushListener(brushDialog, largeBtn, largeBrush);
       brushDialog.show();
 
     } else if (view.getId() == R.id.erase_btn) {
@@ -159,37 +151,91 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
       });
       newDialog.show();
     } else if (view.getId() == R.id.save_btn) {
-      AlertDialog.Builder saveDialog = new AlertDialog.Builder(getActivity());
-      saveDialog.setTitle("Save drawing");
-      saveDialog.setMessage("Save drawing to device Gallery?");
-      saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          //save drawing
-        }
-      });
-      saveDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          dialog.cancel();
-        }
-      });
-      saveDialog.show();
-      drawView.setDrawingCacheEnabled(true);
-      String imgSaved = MediaStore.Images.Media.insertImage(
-          getActivity().getContentResolver(), drawView.getDrawingCache(),
-          UUID.randomUUID().toString() + ".png", "drawing");
-      if (imgSaved != null) {
-        Toast savedToast = Toast.makeText(getActivity().getApplicationContext(),
-            "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
-        savedToast.show();
-      } else {
-        Toast unsavedToast = Toast.makeText(getActivity().getApplicationContext(),
-            "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
-        unsavedToast.show();
+      int externalPermissionCheck = ContextCompat.checkSelfPermission(getActivity(),
+          Manifest.permission.WRITE_EXTERNAL_STORAGE);
+      if (externalPermissionCheck==-1){
+        askPermissionStorage();
+      }else {
+        saveCurrentImage();
       }
-      drawView.destroyDrawingCache();
     }
 
   }
 
+  private void saveCurrentImage() {
+    drawView.setDrawingCacheEnabled(true);
+    String imgSaved = MediaStore.Images.Media.insertImage(
+        getActivity().getContentResolver(), drawView.getDrawingCache(),
+        UUID.randomUUID().toString() + ".png", "drawing");
+    if (imgSaved != null) {
+      Toast savedToast = Toast.makeText(getActivity().getApplicationContext(),
+          "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
+      savedToast.show();
+    } else {
+      Toast unsavedToast = Toast.makeText(getActivity().getApplicationContext(),
+          "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
+      unsavedToast.show();
+    }
+    drawView.destroyDrawingCache();
+  }
+
+  private void setBrushListener(final Dialog brushDialog, ImageButton button,
+      final float brush) {
+    button.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        drawView.setBrushSize(brush);
+        drawView.setLastBrushSize(brush);
+        drawView.setErase(false);
+        brushDialog.dismiss();
+      }
+    });
+  }
+
+  private void askPermissionStorage() {
+    //for media
+    if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.
+        WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+      requestPermissions(new
+              String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+          MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+    }
+
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
+      if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        saveCurrentImage();
+      } else {
+        Toast unsavedToast = Toast.makeText(getActivity().getApplicationContext(),
+            "Oops! Need permission to save image", Toast.LENGTH_SHORT);
+        unsavedToast.show();
+
+      }
+    }
+  }
+
+  @Override
+  public void onSaveInstanceState(@NonNull Bundle outState) {
+    viewModel.bitmap = drawView.getCanvasBitmap();
+    viewModel.path = drawView.getDrawPath();
+    super.onSaveInstanceState(outState);
+  }
+
+  public static class DrawingViewModel extends ViewModel {
+    public Bitmap bitmap;
+    public Path path;
+  }
+
+/*  @Override
+  public void onSaveInstanceState(@NonNull Bundle outState) {
+    outState.putByteArray(mapImage);
+    super.onSaveInstanceState(outState);
+  }*/
 }
 

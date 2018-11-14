@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import edu.cnm.deepdive.coloringapp.R;
+import org.w3c.dom.Attr;
 
 /**
  * The type Drawing view.
@@ -43,7 +44,9 @@ public class DrawingView extends View {
   private void setupDrawing() {
     brushSize = getResources().getInteger(R.integer.medium_size);
     lastBrushSize = brushSize;
-    drawPath = new Path();
+    if (drawPath == null){
+      drawPath = new Path();
+    }
     drawPaint = new Paint();
     drawPaint.setColor(paintColor);
     drawPaint.setColor(Color.TRANSPARENT);
@@ -61,7 +64,12 @@ public class DrawingView extends View {
   protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 
     super.onSizeChanged(w, h, oldw, oldh);
-    canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+    if (canvasBitmap == null) {
+      canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+    }
+    if (drawPath == null){
+      drawPath = new Path();
+    }
     drawCanvas = new Canvas(canvasBitmap);
   }
 
@@ -160,4 +168,19 @@ public class DrawingView extends View {
     invalidate();
   }
 
+  public Bitmap getCanvasBitmap() {
+    return canvasBitmap;
+  }
+
+  public void setCanvasBitmap(Bitmap canvasBitmap) {
+    this.canvasBitmap = canvasBitmap;
+  }
+
+  public Path getDrawPath() {
+    return drawPath;
+  }
+
+  public void setDrawPath(Path drawPath) {
+    this.drawPath = drawPath;
+  }
 }
