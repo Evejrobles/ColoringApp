@@ -2,9 +2,8 @@ package edu.cnm.deepdive.coloringapp.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -14,15 +13,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import edu.cnm.deepdive.coloringapp.R;
 import edu.cnm.deepdive.coloringapp.controler.MainActivity.PaintClickable;
+import edu.cnm.deepdive.coloringapp.model.db.ColoringAppDatabase;
+import edu.cnm.deepdive.coloringapp.model.entity.ColoringBackgroundEntity;
+import java.util.List;
 import java.util.UUID;
 
 
+/**
+ * The type Coloring fragment.
+ */
 public class ColoringFragment extends Fragment implements OnClickListener, PaintClickable {
 
   private DrawingView drawView;
@@ -47,13 +51,14 @@ public class ColoringFragment extends Fragment implements OnClickListener, Paint
     drawBtn = (ImageButton) view.findViewById(R.id.draw_btn);
     drawBtn.setOnClickListener(this);
     drawView.setBrushSize(mediumBrush);
-    eraseBtn = (ImageButton)view.findViewById(R.id.erase_btn);
+    eraseBtn = (ImageButton) view.findViewById(R.id.erase_btn);
     eraseBtn.setOnClickListener(this);
-    newBtn = (ImageButton)view.findViewById(R.id.new_btn);
+    newBtn = (ImageButton) view.findViewById(R.id.new_btn);
     newBtn.setOnClickListener(this);
-    saveBtn = (ImageButton)view.findViewById(R.id.save_btn);
+    saveBtn = (ImageButton) view.findViewById(R.id.save_btn);
     saveBtn.setOnClickListener(this);
 
+    drawView.setBackground(getActivity().getDrawable(R.drawable.star_wars));
 
     return view;
   }
@@ -112,12 +117,12 @@ public class ColoringFragment extends Fragment implements OnClickListener, Paint
       });
       brushDialog.show();
 
-    }else if(view.getId()==R.id.erase_btn){
+    } else if (view.getId() == R.id.erase_btn) {
       final Dialog brushDialog = new Dialog(getActivity());
       brushDialog.setTitle("Eraser size:");
       brushDialog.setContentView(R.layout.brush_chooser);
-      ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
-      smallBtn.setOnClickListener(new OnClickListener(){
+      ImageButton smallBtn = (ImageButton) brushDialog.findViewById(R.id.small_brush);
+      smallBtn.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
           drawView.setErase(true);
@@ -125,8 +130,8 @@ public class ColoringFragment extends Fragment implements OnClickListener, Paint
           brushDialog.dismiss();
         }
       });
-      ImageButton mediumBtn = (ImageButton)brushDialog.findViewById(R.id.medium_brush);
-      mediumBtn.setOnClickListener(new OnClickListener(){
+      ImageButton mediumBtn = (ImageButton) brushDialog.findViewById(R.id.medium_brush);
+      mediumBtn.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
           drawView.setErase(true);
@@ -134,8 +139,8 @@ public class ColoringFragment extends Fragment implements OnClickListener, Paint
           brushDialog.dismiss();
         }
       });
-      ImageButton largeBtn = (ImageButton)brushDialog.findViewById(R.id.large_brush);
-      largeBtn.setOnClickListener(new OnClickListener(){
+      ImageButton largeBtn = (ImageButton) brushDialog.findViewById(R.id.large_brush);
+      largeBtn.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
           drawView.setErase(true);
@@ -144,35 +149,33 @@ public class ColoringFragment extends Fragment implements OnClickListener, Paint
         }
       });
       brushDialog.show();
-    }
-    else if(view.getId()==R.id.new_btn){
+    } else if (view.getId() == R.id.new_btn) {
       AlertDialog.Builder newDialog = new AlertDialog.Builder(getActivity());
       newDialog.setTitle("New drawing");
       newDialog.setMessage("Start new drawing (you will lose the current drawing)?");
-      newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-        public void onClick(DialogInterface dialog, int which){
+      newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
           drawView.startNew();
           dialog.dismiss();
         }
       });
-      newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-        public void onClick(DialogInterface dialog, int which){
+      newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
           dialog.cancel();
         }
       });
       newDialog.show();
-    }
-    else if(view.getId()==R.id.save_btn){
+    } else if (view.getId() == R.id.save_btn) {
       AlertDialog.Builder saveDialog = new AlertDialog.Builder(getActivity());
       saveDialog.setTitle("Save drawing");
       saveDialog.setMessage("Save drawing to device Gallery?");
-      saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-        public void onClick(DialogInterface dialog, int which){
+      saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
           //save drawing
         }
       });
-      saveDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-        public void onClick(DialogInterface dialog, int which){
+      saveDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
           dialog.cancel();
         }
       });
@@ -180,13 +183,12 @@ public class ColoringFragment extends Fragment implements OnClickListener, Paint
       drawView.setDrawingCacheEnabled(true);
       String imgSaved = MediaStore.Images.Media.insertImage(
           getActivity().getContentResolver(), drawView.getDrawingCache(),
-          UUID.randomUUID().toString()+".png", "drawing");
-      if(imgSaved!=null){
+          UUID.randomUUID().toString() + ".png", "drawing");
+      if (imgSaved != null) {
         Toast savedToast = Toast.makeText(getActivity().getApplicationContext(),
             "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
         savedToast.show();
-      }
-      else{
+      } else {
         Toast unsavedToast = Toast.makeText(getActivity().getApplicationContext(),
             "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
         unsavedToast.show();
@@ -196,5 +198,18 @@ public class ColoringFragment extends Fragment implements OnClickListener, Paint
 
   }
 
+  private class ColoringTask extends AsyncTask<Void, Void, List<ColoringBackgroundEntity>> {
+
+    @Override
+    protected List<ColoringBackgroundEntity> doInBackground(Void... voids) {
+      return ColoringAppDatabase.getInstance(getActivity()).getColoringtDao().select();
+    }
+
+    @Override
+    protected void onPostExecute(List<ColoringBackgroundEntity> coloringBackgroundEntities) {
+      String fileName = coloringBackgroundEntities.get(0).getFileName();
+      drawView.setBackground(getActivity().getDrawable(getActivity().getResources().getIdentifier(fileName, "drawable",getActivity().getPackageName())));
+    }
+  }
 }
 

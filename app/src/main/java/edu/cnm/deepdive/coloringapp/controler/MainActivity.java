@@ -1,13 +1,10 @@
 package edu.cnm.deepdive.coloringapp.controler;
 
-import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,10 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import edu.cnm.deepdive.coloringapp.R;
 import edu.cnm.deepdive.coloringapp.view.ColoringFragment;
 import edu.cnm.deepdive.coloringapp.view.DrawingFragment;
 
+/**
+ * The type Main activity.
+ */
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -32,14 +33,13 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
-
-      fab = (FloatingActionButton) findViewById(R.id.fab);
-      fab.setOnClickListener(new View.OnClickListener() {
-     @Override
+    fab = (FloatingActionButton) findViewById(R.id.fab);
+    fab.setOnClickListener(new View.OnClickListener() {
+      @Override
       public void onClick(View view) {
         Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-           .setAction("Action", null).show();
-     }
+            .setAction("Action", null).show();
+      }
     });
 
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity
     navigationView.setNavigationItemSelectedListener(this);
 
     fragment = new DrawingFragment();
-    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
+        .commit();
   }
 
   @Override
@@ -101,11 +102,11 @@ public class MainActivity extends AppCompatActivity
     } else if (id == R.id.nav_color) {
       fab.setVisibility(View.VISIBLE);
       fragment = new ColoringFragment();
-      getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+      getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
+          .commit();
     } else if (id == R.id.nav_save) {
 
     } else if (id == R.id.nav_share) {
-
 
     }
 
@@ -114,11 +115,25 @@ public class MainActivity extends AppCompatActivity
     return true;
   }
 
+  /**
+   * Paint clicked.
+   *
+   * @param view the view
+   */
   public void paintClicked(View view) {
     ((PaintClickable) fragment).paintClicked(view);
   }
 
-  public interface PaintClickable{
+  /**
+   * The interface Paint clickable.
+   */
+  public interface PaintClickable {
+
+    /**
+     * Paint clicked.
+     *
+     * @param view the view
+     */
     void paintClicked(View view);
   }
 

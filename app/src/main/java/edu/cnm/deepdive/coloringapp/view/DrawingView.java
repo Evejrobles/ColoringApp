@@ -1,21 +1,23 @@
 package edu.cnm.deepdive.coloringapp.view;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff.Mode;
-import android.view.View;
 import android.content.Context;
-import android.util.AttributeSet;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.view.MotionEvent;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
+import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.widget.ImageButton;
+import android.view.MotionEvent;
+import android.view.View;
 import edu.cnm.deepdive.coloringapp.R;
 
+/**
+ * The type Drawing view.
+ */
 public class DrawingView extends View {
 
   private Path drawPath;
@@ -24,14 +26,21 @@ public class DrawingView extends View {
   private Canvas drawCanvas;
   private Bitmap canvasBitmap;
   private float brushSize, lastBrushSize;
-  private boolean erase=false;
+  private boolean erase = false;
 
 
-  public DrawingView(Context context, AttributeSet attrs){
+  /**
+   * Instantiates a new Drawing view.
+   *
+   * @param context the context
+   * @param attrs the attrs
+   */
+  public DrawingView(Context context, AttributeSet attrs) {
     super(context, attrs);
     setupDrawing();
   }
-  private void setupDrawing(){
+
+  private void setupDrawing() {
     brushSize = getResources().getInteger(R.integer.medium_size);
     lastBrushSize = brushSize;
     drawPath = new Path();
@@ -47,6 +56,7 @@ public class DrawingView extends View {
     canvasPaint = new Paint(Paint.DITHER_FLAG);
 
   }
+
   @Override
   protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 
@@ -54,12 +64,14 @@ public class DrawingView extends View {
     canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
     drawCanvas = new Canvas(canvasBitmap);
   }
+
   @Override
   protected void onDraw(Canvas canvas) {
 
     canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
     canvas.drawPath(drawPath, drawPaint);
   }
+
   @Override
   public boolean onTouchEvent(MotionEvent event) {
 
@@ -82,32 +94,68 @@ public class DrawingView extends View {
     invalidate();
     return true;
   }
-  public void setColor(String newColor){
+
+  /**
+   * Set color.
+   *
+   * @param newColor the new color
+   */
+  public void setColor(String newColor) {
     invalidate();
     paintColor = Color.parseColor(newColor);
     drawPaint.setColor(paintColor);
   }
-  public void setBrushSize(float newSize){
+
+  /**
+   * Set brush size.
+   *
+   * @param newSize the new size
+   */
+  public void setBrushSize(float newSize) {
 //update size
     float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
         newSize, getResources().getDisplayMetrics());
-    brushSize=pixelAmount;
+    brushSize = pixelAmount;
     drawPaint.setStrokeWidth(brushSize);
 
   }
-  public void setLastBrushSize(float lastSize){
-    lastBrushSize=lastSize;
-  }
-  public float getLastBrushSize(){
-    return lastBrushSize;
-  }
-  public void setErase(boolean isErase){
-    erase=isErase;
-    if(erase) drawPaint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
-    else drawPaint.setXfermode(null);
+
+  /**
+   * Set last brush size.
+   *
+   * @param lastSize the last size
+   */
+  public void setLastBrushSize(float lastSize) {
+    lastBrushSize = lastSize;
   }
 
-  public void startNew(){
+  /**
+   * Get last brush size float.
+   *
+   * @return the float
+   */
+  public float getLastBrushSize() {
+    return lastBrushSize;
+  }
+
+  /**
+   * Set erase.
+   *
+   * @param isErase the is erase
+   */
+  public void setErase(boolean isErase) {
+    erase = isErase;
+    if (erase) {
+      drawPaint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));
+    } else {
+      drawPaint.setXfermode(null);
+    }
+  }
+
+  /**
+   * Start new.
+   */
+  public void startNew() {
     drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
     invalidate();
   }

@@ -2,9 +2,7 @@ package edu.cnm.deepdive.coloringapp.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -14,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -23,6 +20,9 @@ import edu.cnm.deepdive.coloringapp.controler.MainActivity.PaintClickable;
 import java.util.UUID;
 
 
+/**
+ * The type Drawing fragment.
+ */
 public class DrawingFragment extends Fragment implements OnClickListener, PaintClickable {
 
   private DrawingView drawView;
@@ -46,13 +46,12 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
     drawBtn = (ImageButton) view.findViewById(R.id.draw_btn);
     drawBtn.setOnClickListener(this);
     drawView.setBrushSize(mediumBrush);
-    eraseBtn = (ImageButton)view.findViewById(R.id.erase_btn);
+    eraseBtn = (ImageButton) view.findViewById(R.id.erase_btn);
     eraseBtn.setOnClickListener(this);
-    newBtn = (ImageButton)view.findViewById(R.id.new_btn);
+    newBtn = (ImageButton) view.findViewById(R.id.new_btn);
     newBtn.setOnClickListener(this);
-    saveBtn = (ImageButton)view.findViewById(R.id.save_btn);
+    saveBtn = (ImageButton) view.findViewById(R.id.save_btn);
     saveBtn.setOnClickListener(this);
-
 
     return view;
   }
@@ -111,12 +110,12 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
       });
       brushDialog.show();
 
-    }else if(view.getId()==R.id.erase_btn){
+    } else if (view.getId() == R.id.erase_btn) {
       final Dialog brushDialog = new Dialog(getActivity());
       brushDialog.setTitle("Eraser size:");
       brushDialog.setContentView(R.layout.brush_chooser);
-      ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
-      smallBtn.setOnClickListener(new OnClickListener(){
+      ImageButton smallBtn = (ImageButton) brushDialog.findViewById(R.id.small_brush);
+      smallBtn.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
           drawView.setErase(true);
@@ -124,8 +123,8 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
           brushDialog.dismiss();
         }
       });
-      ImageButton mediumBtn = (ImageButton)brushDialog.findViewById(R.id.medium_brush);
-      mediumBtn.setOnClickListener(new OnClickListener(){
+      ImageButton mediumBtn = (ImageButton) brushDialog.findViewById(R.id.medium_brush);
+      mediumBtn.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
           drawView.setErase(true);
@@ -133,8 +132,8 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
           brushDialog.dismiss();
         }
       });
-      ImageButton largeBtn = (ImageButton)brushDialog.findViewById(R.id.large_brush);
-      largeBtn.setOnClickListener(new OnClickListener(){
+      ImageButton largeBtn = (ImageButton) brushDialog.findViewById(R.id.large_brush);
+      largeBtn.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
           drawView.setErase(true);
@@ -143,35 +142,33 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
         }
       });
       brushDialog.show();
-    }
-    else if(view.getId()==R.id.new_btn){
+    } else if (view.getId() == R.id.new_btn) {
       AlertDialog.Builder newDialog = new AlertDialog.Builder(getActivity());
       newDialog.setTitle("New drawing");
       newDialog.setMessage("Start new drawing (you will lose the current drawing)?");
-      newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-        public void onClick(DialogInterface dialog, int which){
+      newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
           drawView.startNew();
           dialog.dismiss();
         }
       });
-      newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-        public void onClick(DialogInterface dialog, int which){
+      newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
           dialog.cancel();
         }
       });
       newDialog.show();
-    }
-    else if(view.getId()==R.id.save_btn){
+    } else if (view.getId() == R.id.save_btn) {
       AlertDialog.Builder saveDialog = new AlertDialog.Builder(getActivity());
       saveDialog.setTitle("Save drawing");
       saveDialog.setMessage("Save drawing to device Gallery?");
-      saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-        public void onClick(DialogInterface dialog, int which){
+      saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
           //save drawing
         }
       });
-      saveDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-        public void onClick(DialogInterface dialog, int which){
+      saveDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
           dialog.cancel();
         }
       });
@@ -179,13 +176,12 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
       drawView.setDrawingCacheEnabled(true);
       String imgSaved = MediaStore.Images.Media.insertImage(
           getActivity().getContentResolver(), drawView.getDrawingCache(),
-          UUID.randomUUID().toString()+".png", "drawing");
-      if(imgSaved!=null){
+          UUID.randomUUID().toString() + ".png", "drawing");
+      if (imgSaved != null) {
         Toast savedToast = Toast.makeText(getActivity().getApplicationContext(),
             "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
         savedToast.show();
-      }
-      else{
+      } else {
         Toast unsavedToast = Toast.makeText(getActivity().getApplicationContext(),
             "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
         unsavedToast.show();
@@ -195,5 +191,5 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
 
   }
 
-  }
+}
 
