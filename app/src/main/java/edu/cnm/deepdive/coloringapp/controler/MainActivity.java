@@ -1,9 +1,9 @@
 package edu.cnm.deepdive.coloringapp.controler;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import edu.cnm.deepdive.coloringapp.ColorApplication;
 import edu.cnm.deepdive.coloringapp.R;
 import edu.cnm.deepdive.coloringapp.view.ColoringFragment;
 import edu.cnm.deepdive.coloringapp.view.DrawingFragment;
@@ -70,18 +71,17 @@ public class MainActivity extends AppCompatActivity
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    int id = item.getItemId();
-
-    //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
-      return true;
+    boolean handled = true;
+    switch (item.getItemId()){
+      case  R.id.sign_out:
+        signOut();
+        break;
+      default:
+        handled = super.onOptionsItemSelected(item);
     }
-
-    return super.onOptionsItemSelected(item);
+    return handled;
   }
+
 
   @SuppressWarnings("StatementWithEmptyBody")
   @Override
@@ -132,6 +132,15 @@ public class MainActivity extends AppCompatActivity
      * @param view the view
      */
     void paintClicked(View view);
+  }
+  private void signOut() {
+    ColorApplication app = ColorApplication.getInstance();
+    app.getClient().signOut().addOnCompleteListener(this, (task) ->{
+      app.setAccount(null);
+      Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+      startActivity(intent);
+    });
   }
 
 }

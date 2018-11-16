@@ -21,5 +21,6 @@
   <string name="med">Medium</string>
   <string name="lrg">Large</string>
   <string name="fab_action">Press to change coloring pictures</string>
-  <string name="sign_in_error">Unable to authenticte with google sign in</string>
+  <string name="sign_in_error">Unable to sign in. Please check your credentials and connection.</string>
+  <string name="sign_out">Signout</string>
 </resources>
