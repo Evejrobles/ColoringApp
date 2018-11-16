@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -34,6 +33,9 @@ import java.util.UUID;
 public class DrawingFragment extends Fragment implements OnClickListener, PaintClickable {
 
   private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 12;
+  /**
+   * The Draw view.
+   */
   protected DrawingView drawView;
   private ImageButton currPaint, drawBtn, eraseBtn, newBtn, saveBtn;
   private float smallBrush, mediumBrush, largeBrush;
@@ -153,9 +155,9 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
     } else if (view.getId() == R.id.save_btn) {
       int externalPermissionCheck = ContextCompat.checkSelfPermission(getActivity(),
           Manifest.permission.WRITE_EXTERNAL_STORAGE);
-      if (externalPermissionCheck==-1){
+      if (externalPermissionCheck == -1) {
         askPermissionStorage();
-      }else {
+      } else {
         saveCurrentImage();
       }
     }
@@ -194,8 +196,9 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
 
   private void askPermissionStorage() {
     //for media
-    if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.
-        WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+    if (ContextCompat
+        .checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.
+            WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
       requestPermissions(new
               String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -206,7 +209,8 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
   }
 
   @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
       if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -227,8 +231,18 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
     super.onSaveInstanceState(outState);
   }
 
+  /**
+   * The type Drawing view model.
+   */
   public static class DrawingViewModel extends ViewModel {
+
+    /**
+     * The Bitmap.
+     */
     public Bitmap bitmap;
+    /**
+     * The Path.
+     */
     public Path path;
   }
 

@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     boolean handled = true;
-    switch (item.getItemId()){
-      case  R.id.sign_out:
+    switch (item.getItemId()) {
+      case R.id.sign_out:
         signOut();
         break;
       default:
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity
     } else if (id == R.id.nav_color) {
       fab.setVisibility(View.VISIBLE);
       coloring_fragment = new ColoringFragment();
-      fab.setOnClickListener((v)->coloring_fragment.switchBackground());
+      fab.setOnClickListener((v) -> coloring_fragment.switchBackground());
       fragment = coloring_fragment;
       getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
           .commit();
@@ -133,9 +133,10 @@ public class MainActivity extends AppCompatActivity
      */
     void paintClicked(View view);
   }
+
   private void signOut() {
     ColorApplication app = ColorApplication.getInstance();
-    app.getClient().signOut().addOnCompleteListener(this, (task) ->{
+    app.getClient().signOut().addOnCompleteListener(this, (task) -> {
       app.setAccount(null);
       Intent intent = new Intent(MainActivity.this, LoginActivity.class);
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -13,6 +13,9 @@ import com.google.android.gms.tasks.Task;
 import edu.cnm.deepdive.coloringapp.ColorApplication;
 import edu.cnm.deepdive.coloringapp.R;
 
+/**
+ * The type Login activity.
+ */
 public class LoginActivity extends AppCompatActivity {
 
   private static final int REQUEST_CODE = 1000;
@@ -29,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
   protected void onStart() {
     super.onStart();
     GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-    if(account!= null) {
+    if (account != null) {
       ColorApplication.getInstance().setAccount(account);
       switchToMain();
     }
@@ -54,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     Intent intent = ColorApplication.getInstance().getClient().getSignInIntent();
     startActivityForResult(intent, REQUEST_CODE);
   }
+
   private void switchToMain() {
     Intent intent = new Intent(this, MainActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

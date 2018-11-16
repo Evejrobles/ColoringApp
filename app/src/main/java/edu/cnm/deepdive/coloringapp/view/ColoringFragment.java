@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import edu.cnm.deepdive.coloringapp.R;
 import edu.cnm.deepdive.coloringapp.model.db.ColoringAppDatabase;
 import edu.cnm.deepdive.coloringapp.model.entity.ColoringBackgroundEntity;
 import java.util.List;
@@ -25,27 +24,25 @@ public class ColoringFragment extends DrawingFragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = super.onCreateView(inflater,container,savedInstanceState);
+    View view = super.onCreateView(inflater, container, savedInstanceState);
     new ColoringInsertTask().execute();
-
-
 
     return view;
   }
 
-  public void switchBackground(){
+  /**
+   * Switch background.
+   */
+  public void switchBackground() {
     String fileName = coloringBackGrounds.get(currentBackGround).getFileName();
-    drawView.setBackground(getActivity().getDrawable(getActivity().getResources().getIdentifier(fileName, "drawable",getActivity().getPackageName())));
+    drawView.setBackground(getActivity().getDrawable(getActivity().getResources()
+        .getIdentifier(fileName, "drawable", getActivity().getPackageName())));
     currentBackGround++;
-    if (currentBackGround > coloringBackGrounds.size() - 1) currentBackGround = 0;
+    if (currentBackGround > coloringBackGrounds.size() - 1) {
+      currentBackGround = 0;
+    }
 
   }
-
-
-
-
-
-
 
 
   private class ColoringInsertTask extends AsyncTask<Void, Void, Void> {
@@ -120,7 +117,7 @@ public class ColoringFragment extends DrawingFragment {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-     new ColoringTask().execute();
+      new ColoringTask().execute();
 
     }
   }

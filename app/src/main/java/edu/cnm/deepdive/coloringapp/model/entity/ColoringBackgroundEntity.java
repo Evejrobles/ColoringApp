@@ -15,6 +15,7 @@ public class ColoringBackgroundEntity {
   private long id;
 
   private String fileName;
+
   /**
    * Gets id.
    *
@@ -33,10 +34,20 @@ public class ColoringBackgroundEntity {
     this.id = id;
   }
 
+  /**
+   * Gets file name.
+   *
+   * @return the file name
+   */
   public String getFileName() {
     return fileName;
   }
 
+  /**
+   * Sets file name.
+   *
+   * @param fileName the file name
+   */
   public void setFileName(String fileName) {
     this.fileName = fileName;
   }

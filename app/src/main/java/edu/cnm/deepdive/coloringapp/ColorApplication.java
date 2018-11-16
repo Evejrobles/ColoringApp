@@ -20,6 +20,11 @@ public class ColorApplication extends Application {
   private static ColorApplication instance;
 
 
+  /**
+   * Gets instance.
+   *
+   * @return the instance
+   */
   public static ColorApplication getInstance() {
     return instance;
   }
@@ -30,7 +35,8 @@ public class ColorApplication extends Application {
     instance = this;
     Stetho.initializeWithDefaults(this);
     ColoringAppDatabase.getInstance(this);
-    GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+    GoogleSignInOptions options = new GoogleSignInOptions.Builder(
+        GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestEmail()
         .requestId()
         //Include requestIdToken if we're using Google Sign-in for authenticating on back end.
@@ -44,18 +50,38 @@ public class ColorApplication extends Application {
     super.onTerminate();
   }
 
+  /**
+   * Gets client.
+   *
+   * @return the client
+   */
   public GoogleSignInClient getClient() {
     return client;
   }
 
+  /**
+   * Sets client.
+   *
+   * @param client the client
+   */
   public void setClient(GoogleSignInClient client) {
     this.client = client;
   }
 
+  /**
+   * Gets account.
+   *
+   * @return the account
+   */
   public GoogleSignInAccount getAccount() {
     return account;
   }
 
+  /**
+   * Sets account.
+   *
+   * @param account the account
+   */
   public void setAccount(GoogleSignInAccount account) {
     this.account = account;
   }
