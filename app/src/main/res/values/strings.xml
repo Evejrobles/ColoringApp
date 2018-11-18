@@ -2,7 +2,7 @@
   <string name="app_name">ColoringApp</string>
   <string name="navigation_drawer_open">Open navigation drawer</string>
   <string name="navigation_drawer_close">Close navigation drawer</string>
-  <string name="nav_header_title">Android Studio</string>
+  <string name="nav_header_title">Coloring App</string>
   <string name="nav_header_subtitle">android.studio@android.com</string>
   <string name="nav_header_desc">Navigation header</string>
   <string name="action_settings">Settings</string>
@@ -20,7 +20,6 @@
   <string name="sml">Small</string>
   <string name="med">Medium</string>
   <string name="lrg">Large</string>
-  <string name="fab_action">Press to change coloring pictures</string>
   <string name="sign_in_error">Unable to sign in. Please check your credentials and connection.</string>
   <string name="sign_out">Signout</string>
 </resources>
