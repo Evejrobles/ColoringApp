@@ -9,6 +9,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+
+
     }
     buildTypes {
         release {
@@ -19,6 +26,9 @@ android {
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
+    }
+    sourceSets {
+        main { assets.srcDirs = ['src/main/assets', 'src/main/assets/open_source_licenses.html'] }
     }
 }
 

@@ -8,11 +8,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import edu.cnm.deepdive.coloringapp.ColorApplication;
 import edu.cnm.deepdive.coloringapp.R;
 import edu.cnm.deepdive.coloringapp.view.ColoringFragment;
@@ -25,7 +30,7 @@ public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
 
   private FloatingActionButton fab;
-  private Fragment fragment;
+  private DrawingFragment fragment;
   private ColoringFragment coloring_fragment;
 
   @Override
@@ -51,7 +56,16 @@ public class MainActivity extends AppCompatActivity
     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
         .commit();
   }
-
+  private void displayLicensesAlertDialog() {
+    WebView view = (WebView) LayoutInflater.from(this).inflate(R.layout.dialog_licenses, null);
+    view.loadUrl("file:///android_asset/open_source_licenses.html");
+   AlertDialog alertDialog = new Builder(this,
+        R.style.Theme_AppCompat_Light_Dialog_Alert)
+        .setTitle(getString(R.string.action_licenses))
+        .setView(view)
+        .setPositiveButton(android.R.string.ok, null)
+        .show();
+  }
   @Override
   public void onBackPressed() {
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -104,8 +118,10 @@ public class MainActivity extends AppCompatActivity
     } else if (id == R.id.nav_save) {
 
     } else if (id == R.id.nav_share) {
+      fragment.shareImage();
 
     }
+
 
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
@@ -133,6 +149,7 @@ public class MainActivity extends AppCompatActivity
      */
     void paintClicked(View view);
   }
+
 
   private void signOut() {
     ColorApplication app = ColorApplication.getInstance();

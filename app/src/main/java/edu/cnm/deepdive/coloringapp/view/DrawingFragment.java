@@ -6,9 +6,11 @@ import android.app.Dialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Path;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -32,7 +34,8 @@ import java.util.UUID;
  */
 public class DrawingFragment extends Fragment implements OnClickListener, PaintClickable {
 
-  private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 12;
+  private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+  private static final int MY_PERMISSIONS_REQUEST_SHARE = 2;
   /**
    * The Draw view.
    */
@@ -153,18 +156,37 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
       });
       newDialog.show();
     } else if (view.getId() == R.id.save_btn) {
-      int externalPermissionCheck = ContextCompat.checkSelfPermission(getActivity(),
-          Manifest.permission.WRITE_EXTERNAL_STORAGE);
-      if (externalPermissionCheck == -1) {
-        askPermissionStorage();
-      } else {
-        saveCurrentImage();
-      }
+      saveImage(MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
     }
 
   }
 
-  private void saveCurrentImage() {
+  private void saveImage(int code) {
+    int externalPermissionCheck = ContextCompat.checkSelfPermission(getActivity(),
+        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    if (externalPermissionCheck == -1) {
+      askPermissionStorage(code);
+    } else {
+      Uri uriToImage = Uri.parse(saveCurrentImage());
+      if (code == MY_PERMISSIONS_REQUEST_SHARE) {
+        shareFromUri(uriToImage);
+      }
+    }
+  }
+
+  private void shareFromUri(Uri uriToImage) {
+    Intent shareIntent = new Intent();
+    shareIntent.setAction(Intent.ACTION_SEND);
+    shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
+    shareIntent.setType("image/jpeg");
+    startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+  }
+
+  public void shareImage(){
+    saveImage(MY_PERMISSIONS_REQUEST_SHARE);
+  }
+
+  private String saveCurrentImage() {
     drawView.setDrawingCacheEnabled(true);
     String imgSaved = MediaStore.Images.Media.insertImage(
         getActivity().getContentResolver(), drawView.getDrawingCache(),
@@ -179,6 +201,7 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
       unsavedToast.show();
     }
     drawView.destroyDrawingCache();
+    return imgSaved;
   }
 
   private void setBrushListener(final Dialog brushDialog, ImageButton button,
@@ -194,7 +217,7 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
     });
   }
 
-  private void askPermissionStorage() {
+  private void askPermissionStorage(int code) {
     //for media
     if (ContextCompat
         .checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.
@@ -202,7 +225,7 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
 
       requestPermissions(new
               String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-          MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+          code);
 
     }
 
@@ -212,9 +235,12 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
+    if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE || requestCode == MY_PERMISSIONS_REQUEST_SHARE) {
       if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        saveCurrentImage();
+        Uri uriToImage = Uri.parse(saveCurrentImage());
+        if (requestCode == MY_PERMISSIONS_REQUEST_SHARE){
+          shareFromUri(uriToImage);
+        }
       } else {
         Toast unsavedToast = Toast.makeText(getActivity().getApplicationContext(),
             "Oops! Need permission to save image", Toast.LENGTH_SHORT);

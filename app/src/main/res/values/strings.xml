@@ -22,4 +22,6 @@
   <string name="lrg">Large</string>
   <string name="sign_in_error">Unable to sign in. Please check your credentials and connection.</string>
   <string name="sign_out">Signout</string>
+  <string name="action_licenses"/>
+  <string name="send_to">Send To</string>
 </resources>
