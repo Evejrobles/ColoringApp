@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity
       fragment = coloring_fragment;
       getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
           .commit();
-    } else if (id == R.id.nav_save) {
+
 
     } else if (id == R.id.nav_share) {
       fragment.shareImage();

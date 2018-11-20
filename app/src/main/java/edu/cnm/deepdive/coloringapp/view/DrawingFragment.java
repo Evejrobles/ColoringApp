@@ -61,6 +61,8 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
 
     currPaint = (ImageButton) paintLayout.getChildAt(0);
     currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+    String color = "#AF660000";
+    drawView.setColor(color);
     smallBrush = getResources().getInteger(R.integer.small_size);
     mediumBrush = getResources().getInteger(R.integer.medium_size);
     largeBrush = getResources().getInteger(R.integer.large_size);
