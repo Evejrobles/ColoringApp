@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Path;
@@ -42,7 +44,6 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
   protected DrawingView drawView;
   private ImageButton currPaint, drawBtn, eraseBtn, newBtn, saveBtn;
   private float smallBrush, mediumBrush, largeBrush;
-  private byte[] mapImage;
   private DrawingViewModel viewModel;
 
   @Nullable
@@ -68,7 +69,7 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
     largeBrush = getResources().getInteger(R.integer.large_size);
     drawBtn = (ImageButton) view.findViewById(R.id.draw_btn);
     drawBtn.setOnClickListener(this);
-    drawView.setBrushSize(mediumBrush);
+    drawView.setBrushSize(getFromSharedPrefs());
     eraseBtn = (ImageButton) view.findViewById(R.id.erase_btn);
     eraseBtn.setOnClickListener(this);
     newBtn = (ImageButton) view.findViewById(R.id.new_btn);
@@ -78,6 +79,7 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
 
     return view;
   }
+
 
   public void paintClicked(View view) {
     drawView.setErase(false);
@@ -95,7 +97,7 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
 
   @Override
   public void onClick(View view) {
-//respond to clicks
+
     if (view.getId() == R.id.draw_btn) {
       final Dialog brushDialog = new Dialog(getActivity());
       brushDialog.setTitle("Brush size:");
@@ -114,32 +116,11 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
       brushDialog.setTitle("Eraser size:");
       brushDialog.setContentView(R.layout.brush_chooser);
       ImageButton smallBtn = (ImageButton) brushDialog.findViewById(R.id.small_brush);
-      smallBtn.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          drawView.setErase(true);
-          drawView.setBrushSize(smallBrush);
-          brushDialog.dismiss();
-        }
-      });
+      setBrushSizeListener(brushDialog, smallBtn, smallBrush);
       ImageButton mediumBtn = (ImageButton) brushDialog.findViewById(R.id.medium_brush);
-      mediumBtn.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          drawView.setErase(true);
-          drawView.setBrushSize(mediumBrush);
-          brushDialog.dismiss();
-        }
-      });
+      setBrushSizeListener(brushDialog, mediumBtn, mediumBrush);
       ImageButton largeBtn = (ImageButton) brushDialog.findViewById(R.id.large_brush);
-      largeBtn.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          drawView.setErase(true);
-          drawView.setBrushSize(largeBrush);
-          brushDialog.dismiss();
-        }
-      });
+      setBrushSizeListener(brushDialog, largeBtn, largeBrush);
       brushDialog.show();
     } else if (view.getId() == R.id.new_btn) {
       AlertDialog.Builder newDialog = new AlertDialog.Builder(getActivity());
@@ -163,6 +144,18 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
 
   }
 
+  private void setBrushSizeListener(Dialog brushDialog, ImageButton button, float brushSize) {
+    button.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        drawView.setErase(true);
+        drawView.setBrushSize(brushSize);
+        saveToSharedPrefs(brushSize);
+        brushDialog.dismiss();
+      }
+    });
+  }
+
   private void saveImage(int code) {
     int externalPermissionCheck = ContextCompat.checkSelfPermission(getActivity(),
         Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -184,7 +177,10 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
     startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
   }
 
-  public void shareImage(){
+  /**
+   * Share image.
+   */
+  public void shareImage() {
     saveImage(MY_PERMISSIONS_REQUEST_SHARE);
   }
 
@@ -237,10 +233,11 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE || requestCode == MY_PERMISSIONS_REQUEST_SHARE) {
+    if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
+        || requestCode == MY_PERMISSIONS_REQUEST_SHARE) {
       if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
         Uri uriToImage = Uri.parse(saveCurrentImage());
-        if (requestCode == MY_PERMISSIONS_REQUEST_SHARE){
+        if (requestCode == MY_PERMISSIONS_REQUEST_SHARE) {
           shareFromUri(uriToImage);
         }
       } else {
@@ -251,6 +248,8 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
       }
     }
   }
+
+
 
   @Override
   public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -274,10 +273,16 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
     public Path path;
   }
 
-/*  @Override
-  public void onSaveInstanceState(@NonNull Bundle outState) {
-    outState.putByteArray(mapImage);
-    super.onSaveInstanceState(outState);
-  }*/
+  private void saveToSharedPrefs(float bs){
+    SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor = sharedPreferences.edit();
+    editor.putFloat(getString(R.string.string_key), bs);
+
+    editor.apply();
+  }
+  private Float getFromSharedPrefs(){
+    SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+    return sharedPreferences.getFloat(getString(R.string.string_key), smallBrush);
+  }
 }
 

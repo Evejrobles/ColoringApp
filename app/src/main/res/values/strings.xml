@@ -24,4 +24,9 @@
   <string name="sign_out">Signout</string>
   <string name="action_licenses"/>
   <string name="send_to">Send To</string>
+  <string name="string_key" translatable="false">SMB</string>
+
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="license">Licenses</string>
 </resources>

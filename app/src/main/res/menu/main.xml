@@ -4,6 +4,10 @@
   <item
     android:id="@+id/sign_out"
     android:title="@string/sign_out"
-    app:showAsAction="never" />
+    app:showAsAction="never"/>
+  <item
+    android:id="@+id/license"
+    android:title="@string/license"
+    app:showAsAction="never"/>
 
 </menu>

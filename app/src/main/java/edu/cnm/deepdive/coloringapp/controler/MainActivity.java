@@ -1,10 +1,11 @@
 package edu.cnm.deepdive.coloringapp.controler;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -56,15 +57,10 @@ public class MainActivity extends AppCompatActivity
     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
         .commit();
   }
-  private void displayLicensesAlertDialog() {
-    WebView view = (WebView) LayoutInflater.from(this).inflate(R.layout.dialog_licenses, null);
-    view.loadUrl("file:///android_asset/open_source_licenses.html");
-   AlertDialog alertDialog = new Builder(this,
-        R.style.Theme_AppCompat_Light_Dialog_Alert)
-        .setTitle(getString(R.string.action_licenses))
-        .setView(view)
-        .setPositiveButton(android.R.string.ok, null)
-        .show();
+
+  private void displayLicensesDialogFragment() {
+    LicensesDialogFragment dialog = LicensesDialogFragment.newInstance();
+    dialog.show(getSupportFragmentManager(), "LicensesDialog");
   }
   @Override
   public void onBackPressed() {
@@ -90,6 +86,8 @@ public class MainActivity extends AppCompatActivity
       case R.id.sign_out:
         signOut();
         break;
+      case R.id.license:
+        displayLicensesDialogFragment();
       default:
         handled = super.onOptionsItemSelected(item);
     }
@@ -97,7 +95,6 @@ public class MainActivity extends AppCompatActivity
   }
 
 
-  @SuppressWarnings("StatementWithEmptyBody")
   @Override
   public boolean onNavigationItemSelected(MenuItem item) {
     // Handle navigation view item clicks here.
@@ -122,11 +119,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
     return true;
   }
+
 
   /**
    * Paint clicked.
