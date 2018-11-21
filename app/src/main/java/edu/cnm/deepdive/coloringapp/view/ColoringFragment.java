@@ -32,7 +32,6 @@ public class ColoringFragment extends DrawingFragment implements OnTouchListener
       @Nullable Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
     new ColoringInsertTask().execute();
-    
 
     drawView.setOnTouchListener(this);
 
