@@ -1,24 +1,17 @@
 package edu.cnm.deepdive.coloringapp.controler;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import edu.cnm.deepdive.coloringapp.ColorApplication;
 import edu.cnm.deepdive.coloringapp.R;
 import edu.cnm.deepdive.coloringapp.view.ColoringFragment;
@@ -62,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     LicensesDialogFragment dialog = LicensesDialogFragment.newInstance();
     dialog.show(getSupportFragmentManager(), "LicensesDialog");
   }
+
   @Override
   public void onBackPressed() {
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -12,7 +12,16 @@ import android.webkit.WebView;
 import edu.cnm.deepdive.coloringapp.R;
 
 
+/**
+ * The type Licenses dialog fragment.
+ */
 public class LicensesDialogFragment extends DialogFragment {
+
+  /**
+   * New instance licenses dialog fragment.
+   *
+   * @return the licenses dialog fragment
+   */
   public static LicensesDialogFragment newInstance() {
     return new LicensesDialogFragment();
   }

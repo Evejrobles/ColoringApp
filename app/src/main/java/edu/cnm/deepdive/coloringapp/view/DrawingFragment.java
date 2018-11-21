@@ -80,7 +80,11 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
     return view;
   }
 
-
+  /**
+   * Paint Clicked
+   *
+   * @param view the view
+   */
   public void paintClicked(View view) {
     drawView.setErase(false);
 
@@ -250,7 +254,6 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
   }
 
 
-
   @Override
   public void onSaveInstanceState(@NonNull Bundle outState) {
     viewModel.bitmap = drawView.getCanvasBitmap();
@@ -273,14 +276,15 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
     public Path path;
   }
 
-  private void saveToSharedPrefs(float bs){
+  private void saveToSharedPrefs(float bs) {
     SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
     SharedPreferences.Editor editor = sharedPreferences.edit();
     editor.putFloat(getString(R.string.string_key), bs);
 
     editor.apply();
   }
-  private Float getFromSharedPrefs(){
+
+  private Float getFromSharedPrefs() {
     SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
     return sharedPreferences.getFloat(getString(R.string.string_key), smallBrush);
   }
