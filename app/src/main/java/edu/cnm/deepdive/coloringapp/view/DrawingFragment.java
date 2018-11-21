@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
 
   private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
   private static final int MY_PERMISSIONS_REQUEST_SHARE = 2;
+  //private boolean hasDrawn = false;
   /**
    * The Draw view.
    */
@@ -57,6 +59,7 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
     drawView = (DrawingView) view.findViewById(R.id.drawing);
     drawView.setCanvasBitmap(viewModel.bitmap);
     drawView.setDrawPath(viewModel.path);
+
 
     LinearLayout paintLayout = (LinearLayout) view.findViewById(R.id.paint_colors);
 
@@ -95,6 +98,8 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
       imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
       currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
       currPaint = (ImageButton) view;
+      //hasDrawn = true;
+
     }
     drawView.setBrushSize(drawView.getLastBrushSize());
   }
@@ -134,6 +139,7 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
         public void onClick(DialogInterface dialog, int which) {
           drawView.startNew();
           dialog.dismiss();
+
         }
       });
       newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

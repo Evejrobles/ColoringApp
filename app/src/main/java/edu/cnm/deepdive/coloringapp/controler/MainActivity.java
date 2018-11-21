@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity
   private DrawingFragment fragment;
   private ColoringFragment coloring_fragment;
 
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

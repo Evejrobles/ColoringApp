@@ -1,11 +1,15 @@
 package edu.cnm.deepdive.coloringapp.view;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import edu.cnm.deepdive.coloringapp.model.db.ColoringAppDatabase;
 import edu.cnm.deepdive.coloringapp.model.entity.ColoringBackgroundEntity;
@@ -15,10 +19,12 @@ import java.util.List;
 /**
  * The type Coloring fragment.
  */
-public class ColoringFragment extends DrawingFragment {
+public class ColoringFragment extends DrawingFragment implements OnTouchListener {
 
   private List<ColoringBackgroundEntity> coloringBackGrounds;
   private int currentBackGround;
+  private boolean hasDrawn = false;
+
 
   @Nullable
   @Override
@@ -26,6 +32,9 @@ public class ColoringFragment extends DrawingFragment {
       @Nullable Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
     new ColoringInsertTask().execute();
+    
+
+    drawView.setOnTouchListener(this);
 
     return view;
   }
@@ -34,16 +43,57 @@ public class ColoringFragment extends DrawingFragment {
    * Switch background.
    */
   public void switchBackground() {
-    String fileName = coloringBackGrounds.get(currentBackGround).getFileName();
-    drawView.setBackground(getActivity().getDrawable(getActivity().getResources()
-        .getIdentifier(fileName, "drawable", getActivity().getPackageName())));
-    currentBackGround++;
-    if (currentBackGround > coloringBackGrounds.size() - 1) {
-      currentBackGround = 0;
+
+    if (hasDrawn) {
+      AlertDialog.Builder newDialog = new AlertDialog.Builder(getActivity());
+      newDialog.setTitle("New drawing");
+      newDialog.setMessage("Start new drawing (you will lose the current drawing)?");
+      newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+
+          drawView.startNew();
+          String fileName = coloringBackGrounds.get(currentBackGround).getFileName();
+          drawView.setBackground(getActivity().getDrawable(getActivity().getResources()
+              .getIdentifier(fileName, "drawable", getActivity().getPackageName())));
+          currentBackGround++;
+          if (currentBackGround > coloringBackGrounds.size() - 1) {
+            currentBackGround = 0;
+
+          }
+          hasDrawn = false;
+          dialog.dismiss();
+        }
+      });
+      newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+          dialog.cancel();
+        }
+      });
+
+      newDialog.show();
+
+
+    } else {
+      drawView.startNew();
+      String fileName = coloringBackGrounds.get(currentBackGround).getFileName();
+      drawView.setBackground(getActivity().getDrawable(getActivity().getResources()
+          .getIdentifier(fileName, "drawable", getActivity().getPackageName())));
+      currentBackGround++;
+      if (currentBackGround > coloringBackGrounds.size() - 1) {
+        currentBackGround = 0;
+
+      }
+
+
     }
 
   }
 
+  @Override
+  public boolean onTouch(View v, MotionEvent event) {
+    hasDrawn = true;
+    return false;
+  }
 
   private class ColoringInsertTask extends AsyncTask<Void, Void, Void> {
 
