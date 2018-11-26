@@ -19,4 +19,4 @@
  
  * [ERD](ERDColoringApp.pdf)
  
- * [Javadoc](file:///Users/everobles/Desktop/Bootcamp/projects/ColoringApp/docs/api/index.html)
+ * [Javadoc](api)
