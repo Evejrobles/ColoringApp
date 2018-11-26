@@ -14,7 +14,8 @@ import edu.cnm.deepdive.coloringapp.ColorApplication;
 import edu.cnm.deepdive.coloringapp.R;
 
 /**
- * The type Login activity.
+ * The type Login activity. Google sign in.
+ *
  */
 public class LoginActivity extends AppCompatActivity {
 

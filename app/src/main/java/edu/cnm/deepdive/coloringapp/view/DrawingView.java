@@ -16,7 +16,7 @@ import android.view.View;
 import edu.cnm.deepdive.coloringapp.R;
 
 /**
- * The type Drawing view.
+ * The type Drawing view. This is where touch event makes drawing happen. 
  */
 public class DrawingView extends View {
 

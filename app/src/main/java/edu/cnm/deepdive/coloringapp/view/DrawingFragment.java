@@ -96,7 +96,7 @@ public class DrawingFragment extends Fragment implements OnClickListener, PaintC
       imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
       currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
       currPaint = (ImageButton) view;
-      //hasDrawn = true;
+
 
     }
     drawView.setBrushSize(drawView.getLastBrushSize());
