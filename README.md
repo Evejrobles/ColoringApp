@@ -7,3 +7,9 @@
  Tested on a Nexus 5X API 27 emulator with a compileSdkVersion 28 and a minSdkVersion 21.
  
  Third party libraries used: facebook.stetho:stetho:1.5.0 and google.android.gms:play-services-auth:16.0.1.
+ 
+ Google sign in used in app.
+ 
+ Aesthetic changes that would improve the apps appearance: change of launcher icon background color and possibly a different font style.
+ 
+ Functional stretch goals: would be great if user could zoom in to coloring picture so color could be applied to small areas. 
