@@ -12,4 +12,4 @@
  
  Aesthetic changes that would improve the apps appearance: change of launcher icon background color and possibly a different font style.
  
- Functional stretch goals: would be great if user could zoom in to coloring picture so color could be applied to small areas. 
+ Functional stretch goals: would be great if user could zoom in to coloring picture so color could be applied to small areas. Would like to figure out a way to save image in landscape view, possibly add scrolling to fit image. Would be nice to have more brush and color options.
