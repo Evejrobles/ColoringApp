@@ -19,4 +19,4 @@
  
  * [ERD](ERDColoringApp.pdf)
  
- * [JavaDocs]
+ * [JavaDocs](JavaDocs.html)
