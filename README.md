@@ -2,7 +2,7 @@
  My motivation for this coloring app was to give users an outlet to be creative and releive stress. The app would be useful or fun to anyone who enjoys drawing, and could be used whenever they want to draw. The app also has a coloring section with backgrounds that can be selected by the user.  Additional uses in [User Story.](userstory.pdf)
  
  Coloring App is complete as far as functionallity. The user is able to draw or color, then save and share the image. 
- No known bugs in the app. However, the app is fixed in portrait orientation because I was not able to save the image when phone was rotated to landscape. [Wire Frames](ColoringAppWF.pdf)
+ No known bugs in the app. However, the app is fixed in portrait orientation because I was not able to save the image when phone was rotated to landscape. [Wire Frames.](ColoringAppWF.pdf)
  
  Tested on a Nexus 5X API 27 emulator with a compileSdkVersion 28 and a minSdkVersion 21.
  
@@ -14,5 +14,5 @@
  
  Functional stretch goals: would be great if user could zoom in to coloring picture so color could be applied to small areas. Would like to figure out a way to save image in landscape view, possibly add scrolling to fit image. Would be nice to have more brush and color options. Would like to have more coloring background options.
  
- [Link to](ddl.sql) and 
+ Link to [DDL](ddl.sql) and [ERD.](ERDColoringApp.pdf)
 
