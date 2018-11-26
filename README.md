@@ -15,7 +15,8 @@
  Functional stretch goals: would be great if user could zoom in to coloring picture so color could be applied to small areas. Would like to figure out a way to save image in landscape view, possibly add scrolling to fit image. Would be nice to have more brush and color options. Would like to have more coloring background options.
  
  
- #### Links
+ Links
+ 
  * [DDL](ddl.sql) 
  
  * [ERD](ERDColoringApp.pdf)
