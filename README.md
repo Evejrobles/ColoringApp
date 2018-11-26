@@ -20,3 +20,5 @@
  * [ERD](ERDColoringApp.pdf)
  
  * [Javadoc](api)
+ 
+* [License](LICENSE)
