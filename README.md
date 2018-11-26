@@ -25,5 +25,5 @@
  
  * [Build Instructions](build.pdf)
  
- *
+ * [User Instructions](userinfo.pdf)
 
